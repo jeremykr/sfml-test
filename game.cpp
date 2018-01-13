@@ -5,11 +5,13 @@ using namespace Utils;
 
 namespace GameSpace {
 
-    RenderObject::RenderObject(std::string filename) {
-        if (texture.loadFromFile(filename)) {
-            this->setTexture(texture);
+    Texture* Game::loadTexture(std::string filename) {
+        Texture* texture = new Texture();
+        if ((*texture).loadFromFile(filename)) {
+            return texture;
         } else {
             std::cerr << "Error loading texture from file." << std::endl;
+            return nullptr;
         }
     }
 
@@ -29,26 +31,24 @@ namespace GameSpace {
         window = new RenderWindow(VideoMode(800, 600), "SFML Test Project");
         window->setActive(true);
 
-        coolSquare = new RenderObject("./resources/images/box.png");
+        Texture* pBoxTex = Game::loadTexture("./resources/images/box.png");
+
+        if (pBoxTex != nullptr) {
+            coolSquare = new Sprite(*pBoxTex);
+        }
     }
 
     // Update the game.
     void Game::update(float dt) {
         Vector2f v(0, 0);
-        if (Keyboard::isKeyPressed(Keyboard::A)) {
-            // Move left
-            v += Vector2f(-1, 0);
-        } else if (Keyboard::isKeyPressed(Keyboard::D)) {
-            // Move right
-            v += Vector2f(1, 0);
-        }
-        if (Keyboard::isKeyPressed(Keyboard::W)) {
-            // Move up
-            v += Vector2f(0, -1);
-        } else if (Keyboard::isKeyPressed(Keyboard::S)) {
-            // Move down
-            v += Vector2f(0, 1);
-        }
+        // Move down
+        if (Keyboard::isKeyPressed(Keyboard::A)) v += Vector2f(-1, 0);
+        // Move right
+        if (Keyboard::isKeyPressed(Keyboard::D)) v += Vector2f(1, 0);
+        // Move up
+        if (Keyboard::isKeyPressed(Keyboard::W)) v += Vector2f(0, -1);
+        // Move left
+        if (Keyboard::isKeyPressed(Keyboard::S)) v += Vector2f(0, 1);
         coolSquare->move(normalize(v) * (dt * 500));
     }
 
@@ -96,6 +96,6 @@ namespace GameSpace {
 
     // Clean up the game objects after the game is finished.
     void Game::cleanup() {
-
+        
     }
 }

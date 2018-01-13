@@ -6,13 +6,6 @@
 #include "utils.h"
 
 namespace GameSpace {
-    class RenderObject : public sf::Sprite {
-    public:
-        RenderObject(std::string filename);
-    private:
-        sf::Texture texture;
-    };
-
     class Game {
     public:
         void run();
@@ -21,7 +14,9 @@ namespace GameSpace {
         float fps;
         sf::Clock clock;
         sf::RenderWindow* window;
-        RenderObject* coolSquare;
+        sf::Sprite* coolSquare;
+
+        sf::Texture* loadTexture(std::string filename);
 
         void setup();
         void update(float dt);
